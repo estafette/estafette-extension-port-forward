@@ -14,6 +14,11 @@ type params struct {
 }
 
 func (p *params) SetDefaults(releaseTargetName string) {
+
+	if p.LocalPort == "" && p.ServicePort != "" {
+		p.LocalPort = p.ServicePort
+	}
+
 	// default credentials to release name prefixed with gke if no override in stage params
 	if p.Credentials == "" && releaseTargetName != "" {
 		p.Credentials = fmt.Sprintf("gke-%v", releaseTargetName)
