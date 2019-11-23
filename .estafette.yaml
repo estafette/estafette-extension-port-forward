@@ -41,6 +41,8 @@ stages:
 
       COPY ${ESTAFETTE_GIT_NAME} /
 
+      ENV ESTAFETTE_LOG_FORMAT="console"
+
       ENTRYPOINT ["/${ESTAFETTE_GIT_NAME}"]
     repositories:
     - extensions
