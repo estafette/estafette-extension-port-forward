@@ -29,10 +29,14 @@ stages:
     dontExpand:
     - PATH
     inline: |
-      FROM google/cloud-sdk:271.0.0-alpine
+      FROM google/cloud-sdk:274.0.0-alpine
 
       LABEL maintainer="estafette.io" \
             description="The ${ESTAFETTE_GIT_NAME} component is an Estafette extension to run as a service container and forward ports into a GKE cluster"
+
+      RUN apk update \
+          && apk add --upgrade gnupg \
+          && rm /var/cache/apk/*
 
       ENV KUBECTL_VERSION="v1.15.1"
 
@@ -48,6 +52,22 @@ stages:
     - extensions
     path: ./publish
 
+  check-container:
+    parallelStages:
+      check-efficiency:
+        image: extensions/docker:dev
+        action: dive
+        container: port-forward
+        repositories:
+        - extensions
+
+      vulnerability-scan:
+        image: extensions/docker:dev
+        action: trivy
+        container: port-forward
+        repositories:
+        - extensions
+  
   push-to-docker-hub:
     image: extensions/docker:dev
     action: push
