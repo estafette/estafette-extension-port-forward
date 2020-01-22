@@ -13,7 +13,7 @@ version:
 
 stages:
   build:
-    image: golang:1.13.4-alpine3.10
+    image: golang:1.13.6-alpine3.11
     env:
       CGO_ENABLED: 0
       GOOS: linux
@@ -29,7 +29,7 @@ stages:
     dontExpand:
     - PATH
     inline: |
-      FROM google/cloud-sdk:274.0.0-alpine
+      FROM google/cloud-sdk:277.0.0-alpine
 
       LABEL maintainer="estafette.io" \
             description="The ${ESTAFETTE_GIT_NAME} component is an Estafette extension to run as a service container and forward ports into a GKE cluster"
@@ -38,7 +38,7 @@ stages:
           && apk add --upgrade gnupg \
           && rm /var/cache/apk/*
 
-      ENV KUBECTL_VERSION="v1.15.1"
+      ENV KUBECTL_VERSION="v1.16.4"
 
       RUN wget -O /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
           && chmod +x /usr/local/bin/kubectl
