@@ -13,7 +13,7 @@ version:
 
 stages:
   build:
-    image: golang:1.14.0-alpine3.11
+    image: golang:1.15.2-alpine3.12
     env:
       CGO_ENABLED: 0
       GOOS: linux
@@ -29,7 +29,7 @@ stages:
     dontExpand:
     - PATH
     inline: |
-      FROM google/cloud-sdk:277.0.0-alpine
+      FROM google/cloud-sdk:312.0.0-alpine
 
       LABEL maintainer="estafette.io" \
             description="The ${ESTAFETTE_GIT_NAME} component is an Estafette extension to run as a service container and forward ports into a GKE cluster"
@@ -51,6 +51,7 @@ stages:
     repositories:
     - extensions
     path: ./publish
+    severity: HIGH
 
   check-container:
     parallelStages:
@@ -61,12 +62,12 @@ stages:
         repositories:
         - extensions
 
-      vulnerability-scan:
-        image: extensions/docker:dev
-        action: trivy
-        container: port-forward
-        repositories:
-        - extensions
+      # vulnerability-scan:
+      #   image: extensions/docker:dev
+      #   action: trivy
+      #   container: port-forward
+      #   repositories:
+      #   - extensions
   
   push-to-docker-hub:
     image: extensions/docker:dev
